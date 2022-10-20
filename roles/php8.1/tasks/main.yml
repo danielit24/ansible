@@ -1,0 +1,19 @@
+---
+- name: Installation software-properties-common
+  apt: name=software-properties-common
+
+- name: "Repo PHP 8.1"
+  apt_repository:
+    repo="ppa:ondrej/php"
+
+- name: "Updating the repo"
+  apt: update_cache=yes
+
+- name: Install Main PHP Packages
+  apt: name={{ item }} update_cache=yes state=latest
+  loop: ['php8.1', php8.1-fpm]
+
+- name: Install PHP Modules / Extensions
+  apt: name={{ item }} update_cache=yes state=latest
+  loop: "{{ php_packages }}"
+

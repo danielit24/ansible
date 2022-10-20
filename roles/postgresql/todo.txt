@@ -1,0 +1,5 @@
+- install postgresql
+- set host postgresql 0.0.0.0
+- create database
+- create user database
+- grant all privilage user to database

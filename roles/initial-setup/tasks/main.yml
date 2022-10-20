@@ -1,0 +1,38 @@
+---
+# Sudo User Setup
+- name: Give sudo access to {{remote_user}}
+  blockinfile:
+    path: /etc/sudoers
+    insertafter: '%sudo   ALL=(ALL:ALL) ALL'
+    block: |
+      # Gives sudo access to the {{remote_user}} group
+      %{{remote_user}}        ALL=(ALL)       NOPASSWD: ALL
+  tags: sudo-access
+
+- name: Set authorized key for remote user
+  authorized_key:
+    user: "{{ remote_user }}"
+    state: present
+    key: "{{ copy_local_key }}"
+  tags: access-key
+
+- name: Disable password authentication for root
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin prohibit-password'
+  tags: disable-password-root
+
+# Install Packages
+- name: Update & Upgrade Ubuntu
+  apt: update_cache=yes upgrade=dist force_apt_get=yes
+  tags: initial-setup
+
+- name: Install Prerequisites
+  apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+  tags: initial-setup
+
+- name: Install required system packages
+  apt: name={{ sys_packages }} state=latest
+  tags: initial-setup

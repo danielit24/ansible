@@ -1,0 +1,23 @@
+---
+- name: Install Nginx
+  apt: name=nginx update_cache=yes state=latest 
+
+# Nginx Configuration
+- name: Sets Nginx conf file {{http_conf}}
+  template: 
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/{{http_conf}}.conf
+  notify: Restart Nginx
+
+- name: Adding user {{ remote_user }}  
+  user: name={{ remote_user }}
+        group={{ remote_user }}
+        shell=/bin/bash
+        groups=www-data
+        append=yes
+
+- name: Removes "default" site
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+  notify: Reload Nginx

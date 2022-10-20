@@ -1,0 +1,5 @@
+[ubuntu]
+192.168.56.3 ansible_user=daniel
+
+[contoh]
+10.10.10.2 ansible_user=contoh

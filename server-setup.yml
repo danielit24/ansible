@@ -1,0 +1,10 @@
+---
+- hosts: ubuntu
+  become: true
+  vars: 
+   http_conf: laravel-testing
+  roles: 
+    # - { role: initial-setup, tags: ['sudo-access', 'access-key', 'disable-password-root', 'initial-setup'] }
+    # - { role: php8.1 }
+    - { role: nginx }
+    # - { role: composer }
